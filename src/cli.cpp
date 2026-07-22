@@ -32,6 +32,20 @@ int read_command_line(int argc, char *argv[], Command_Line & cl_options)
         else if (arg == "-i") {
             cl_options.its = atoi(argv[++i]);
         }
+        else if (arg == "-h") {
+            std::cout << "Usage: " << argv[0] << " [options]\n"
+                      << "Options:\n"
+                      << "  -xl <value>   Set the lower x bound\n"
+                      << "  -xh <value>   Set the upper x bound\n"
+                      << "  -yl <value>   Set the lower y bound\n"
+                      << "  -yh <value>   Set the upper y bound\n"
+                      << "  -b <value>    Set the number of blocks\n"
+                      << "  -t <value>    Set the number of threads per block\n"
+                      << "  -o            Output device properties\n"
+                      << "  -i <value>    Set the number of iterations\n"
+                      << "  -h            Show this help message\n";
+            return 1;
+        }
         else {
             std::cerr << "Unknown argument: " << arg << std::endl;
             return -1;

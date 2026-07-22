@@ -21,6 +21,10 @@ int main(int argc, char *argv[]){
 
     ierr = read_command_line(argc, argv, command_line_args);
 
+    if (ierr != 0) {
+        return ierr;
+    }
+
     if (command_line_args.output_device_props) {
         output_device_props();
     }

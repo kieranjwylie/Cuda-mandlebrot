@@ -4,17 +4,17 @@ project(sierpinski LANGUAGES CXX CUDA)
 set(CMAKE_CUDA_STANDARD 14)
 
 set (files 
-    cli.cpp
-    cli.hpp
-    complex.hpp
-    data.hpp
-    grid.cpp
-    grid.hpp
-    main.cpp
-    mandle.cu
-    mandle.cuh
-    output.cpp
-    output.hpp
+    src/cli.cpp
+    src/cli.hpp
+    src/complex.hpp
+    src/data.hpp
+    src/grid.cpp
+    src/grid.hpp
+    src/main.cpp
+    src/mandle.cu
+    src/mandle.cuh
+    src/output.cpp
+    src/output.hpp
 )
 
 add_executable(mandle ${files})
