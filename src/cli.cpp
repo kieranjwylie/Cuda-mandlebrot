@@ -9,10 +9,10 @@ int read_command_line(int argc, char *argv[], Command_Line & cl_options)
         std::string arg = argv[i];
 
         if (arg == "-b") {
-            cl_options.blocks= atoi(argv[++i]);
+            cl_options.blocks= std::stoll(argv[++i]);
         }
         else if (arg == "-t") {
-            cl_options.threads= atoi(argv[++i]);
+            cl_options.threads= std::stoll(argv[++i]);
         }
         else if (arg == "-o") {
             cl_options.output_device_props = true;

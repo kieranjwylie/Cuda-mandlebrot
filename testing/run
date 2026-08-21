@@ -16,22 +16,20 @@ log_MPI=${PWD}/MPI_log.txt
 # Initially lets run at some different resolutions
 base=$PWD
 
-scales=(100 200 500 1000 2000 3000)
-
+scales=(10 100 200 500 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 11000 12000)
 clean_file ${log_CUDA}
 clean_file ${log_MPI}
 
 
 for res in ${scales[@]}; do
-    cd ${base}/${res}
-    export RES=$(basename $PWD)
-    envsubst < ../config.json > config.json
+    export RES=$res
+    envsubst < config.json > config_temp.json
 
     # Cuda
-    time=$(${mandle_CUDA} -i config.json -t 1024 -b 1024)
+    time=$(${mandle_CUDA} -i config_temp.json -t 258 -b 500000)
     echo "${RES} ${time}" >> ${log_CUDA}
 
     # MPI
-    time=$(mpirun --mca btl self,vader -n 6 ${mandle_MPI} -i config.json)
+    time=$(mpirun --mca btl self,vader -n 6 ${mandle_MPI} -i config_temp.json)
     echo "${RES} ${time}" >> ${log_MPI}
 done

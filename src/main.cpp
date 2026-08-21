@@ -28,12 +28,13 @@ int main(int argc, char *argv[]){
         return ierr;
     }
 
-    Problem_Settings settings;
-    ierr = parse_json(command_line_args.config_file, settings);
-
     if (command_line_args.output_device_props) {
         output_device_props();
+        return 0;
     }
+
+    Problem_Settings settings;
+    ierr = parse_json(command_line_args.config_file, settings);
 
     xl = settings.x_min;
     xh = settings.x_max;

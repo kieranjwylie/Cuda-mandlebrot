@@ -1,9 +1,10 @@
+#include <cstdint>
 
 struct Command_Line
 {
     char * config_file = nullptr; // Path to the configuration file
-    int blocks  = 256;  // Number of blocks
-    int threads = 256;  // Number of threads per block
+    int64_t blocks  = 256;  // Number of blocks
+    int64_t threads = 256;  // Number of threads per block
     bool output_device_props = false; 
     bool output_vertex_dist = false;
 };
