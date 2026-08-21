@@ -79,7 +79,7 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     complex_loop<<<blocks,threads>>>(d_x, d_y, d_xidx, d_yidx, its, d_modz, d_vertices_per_thread, d_start_points);
 
     timer.end_timer();
-    float elapsed_time = timer.time_elapsed / 1e6;
+    float elapsed_time = timer.time_elapsed / 1e3;
     std::cout << elapsed_time << std::endl;
 
     cudaError_t err = cudaGetLastError();
