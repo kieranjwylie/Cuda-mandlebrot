@@ -54,6 +54,6 @@ int main(int argc, char *argv[]){
 
     mandle(vertices, command_line_args.blocks, command_line_args.threads, settings.its, modz, vertices_per_thread, start_points);
 
-    write_mandle(vertices, modz);
+    //write_mandle(vertices, modz);
     //write_mandle_bin(vertices, modz);
 }

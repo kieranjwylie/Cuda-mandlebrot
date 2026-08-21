@@ -79,8 +79,8 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     complex_loop<<<blocks,threads>>>(d_x, d_y, d_xidx, d_yidx, its, d_modz, d_vertices_per_thread, d_start_points);
 
     timer.end_timer();
-    float elapsed_time = timer.time_elapsed;
-    std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;
+    float elapsed_time = timer.time_elapsed / 1e6;
+    std::cout << elapsed_time << std::endl;
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess){
@@ -88,7 +88,6 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     }
 
     CUDA_CHECK(cudaMemcpy(h_modz.data(), d_modz, vertices.nv * sizeof(double), cudaMemcpyDeviceToHost));
-
 
     return 0;
 }
