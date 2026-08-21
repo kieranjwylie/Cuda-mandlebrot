@@ -7,6 +7,7 @@
 #include "data.hpp"
 #include "mandle.cuh"
 #include "output.hpp"
+#include "parallel.hpp"
 
 
 int main(int argc, char *argv[]){
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]){
     Command_Line command_line_args;
     Vertex<double> vertices;
     std::vector<double> modz;
+    std::vector<int> vertices_per_thread;
 
 
     ierr = read_command_line(argc, argv, command_line_args);
@@ -34,14 +36,16 @@ int main(int argc, char *argv[]){
     yl = command_line_args.yl;
     yh = command_line_args.yh;
 
-    int n_tot = command_line_args.blocks*command_line_args.threads;
+    nx = command_line_args.nx;
+    ny = command_line_args.ny;
 
-    nx = command_line_args.threads;
-    ny = command_line_args.blocks;
+    int total_threads = command_line_args.blocks * command_line_args.threads;
 
     setup_grid(xl, xh, yl, yh, nx, ny, vertices);
 
-    mandle(vertices, command_line_args.blocks, command_line_args.threads, command_line_args.its, modz);
+    distribute_nodes(vertices, vertices_per_thread, total_threads);
+
+    mandle(vertices, command_line_args.blocks, command_line_args.threads, command_line_args.its, modz, vertices_per_thread);
 
     write_mandle(vertices, modz);
     write_mandle_bin(vertices, modz);

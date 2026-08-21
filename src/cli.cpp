@@ -32,6 +32,12 @@ int read_command_line(int argc, char *argv[], Command_Line & cl_options)
         else if (arg == "-i") {
             cl_options.its = atoi(argv[++i]);
         }
+        else if (arg == "-nx") {
+            cl_options.nx = atoi(argv[++i]);
+        }
+        else if (arg == "-ny") {
+            cl_options.ny = atoi(argv[++i]);
+        }
         else if (arg == "-h") {
             std::cout << "Usage: " << argv[0] << " [options]\n"
                       << "Options:\n"
@@ -43,6 +49,8 @@ int read_command_line(int argc, char *argv[], Command_Line & cl_options)
                       << "  -t <value>    Set the number of threads per block\n"
                       << "  -o            Output device properties\n"
                       << "  -i <value>    Set the number of iterations\n"
+                      << "  -nx <value>   Set the number of x nodes\n"
+                      << "  -ny <value>   Set the number of y nodes\n"
                       << "  -h            Show this help message\n";
             return 1;
         }

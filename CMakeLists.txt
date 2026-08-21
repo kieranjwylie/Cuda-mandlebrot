@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(sierpinski LANGUAGES CXX CUDA)
+project(mandlebrot LANGUAGES CXX CUDA)
 
 set(CMAKE_CUDA_STANDARD 14)
 
@@ -15,6 +15,8 @@ set (files
     src/mandle.cuh
     src/output.cpp
     src/output.hpp
+    src/parallel.cpp
+    src/parallel.hpp
 )
 
 add_executable(mandle ${files})
