@@ -27,15 +27,16 @@ __device__ void mandlebrot_calc(const Complex<double>& c, const int its, double&
     modz = z.mod();
 }
 
-__global__ void complex_loop(const double* x, const double* y, const int* xidx, const int* yidx, const int its, double* modz, const int* vertices_per_thread)
+__global__ void complex_loop(const double* x, const double* y, const int* xidx, const int* yidx, const int its, double* modz, const int* vertices_per_thread, const int* start_points)
 {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     int num_vertices = vertices_per_thread[idx];
+    int start_point = start_points[idx];
 
     double local_modz = -1.0; // Initialize local_modz to -1.0 for each thread
 
     for (int i_vertex = 0; i_vertex < num_vertices; ++i_vertex) {
-        int vertex_idx = idx + i_vertex;
+        int vertex_idx = start_point + i_vertex;
         Complex<double> c(x[xidx[vertex_idx]], y[yidx[vertex_idx]]);
         mandlebrot_calc(c, its, local_modz);
 
@@ -45,10 +46,10 @@ __global__ void complex_loop(const double* x, const double* y, const int* xidx, 
     return;
 }
 
-int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vector<double> & h_modz, std::vector<int> & vertices_per_thread) 
+int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vector<double> & h_modz, std::vector<int> & vertices_per_thread, std::vector<int> & start_points) 
 {
     double *d_x, *d_y, *d_modz;
-    int *d_xidx, *d_yidx, *d_vertices_per_thread;
+    int *d_xidx, *d_yidx, *d_vertices_per_thread, *d_start_points;
     Timer_Cuda timer;
 
     h_modz.resize(vertices.nv);
@@ -62,6 +63,7 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     CUDA_CHECK(cudaMalloc(&d_xidx, vertices.nv * sizeof(int) ));
     CUDA_CHECK(cudaMalloc(&d_yidx, vertices.nv * sizeof(int) ));
     CUDA_CHECK(cudaMalloc(&d_vertices_per_thread, blocks * threads * sizeof(int)));
+    CUDA_CHECK(cudaMalloc(&d_start_points, blocks * threads * sizeof(int)));
     CUDA_CHECK(cudaMalloc(&d_modz, vertices.nv * sizeof(double) ));
 
     CUDA_CHECK(cudaMemcpy(d_x, vertices.x.data(), vertices.nx * sizeof(double), cudaMemcpyHostToDevice));
@@ -69,11 +71,12 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     CUDA_CHECK(cudaMemcpy(d_xidx, vertices.xidx.data(), vertices.nv * sizeof(int), cudaMemcpyHostToDevice));
     CUDA_CHECK(cudaMemcpy(d_yidx, vertices.yidx.data(), vertices.nv * sizeof(int), cudaMemcpyHostToDevice));
     CUDA_CHECK(cudaMemcpy(d_vertices_per_thread, vertices_per_thread.data(), blocks * threads * sizeof(int), cudaMemcpyHostToDevice));
+    CUDA_CHECK(cudaMemcpy(d_start_points, start_points.data(), blocks * threads * sizeof(int), cudaMemcpyHostToDevice));
 
     timer.start_timer();
 
     // Execute
-    complex_loop<<<blocks,threads>>>(d_x, d_y, d_xidx, d_yidx, its, d_modz, d_vertices_per_thread);
+    complex_loop<<<blocks,threads>>>(d_x, d_y, d_xidx, d_yidx, its, d_modz, d_vertices_per_thread, d_start_points);
 
     timer.end_timer();
     float elapsed_time = timer.time_elapsed;

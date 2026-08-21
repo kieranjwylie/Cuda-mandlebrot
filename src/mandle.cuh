@@ -2,7 +2,7 @@
 #include "data.hpp"
 #include <cuda_runtime.h>
 
-int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vector<double> & h_modz, std::vector<int> & vertices_per_thread);
+int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vector<double> & h_modz, std::vector<int> & vertices_per_thread, std::vector<int> & start_points) ;
 int output_device_props();
 
 

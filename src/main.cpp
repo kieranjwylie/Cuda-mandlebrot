@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     Command_Line command_line_args;
     Vertex<double> vertices;
     std::vector<double> modz;
-    std::vector<int> vertices_per_thread;
+    std::vector<int> vertices_per_thread, start_points;
 
     ierr = read_command_line(argc, argv, command_line_args);
 
@@ -48,14 +48,13 @@ int main(int argc, char *argv[]){
 
     setup_grid(xl, xh, yl, yh, nx, ny, vertices);
 
-    //distribute_nodes(vertices, vertices_per_thread, total_threads);
-    distribute_nodes(vertices, vertices_per_thread, comms.size);
+    distribute_nodes(vertices, vertices_per_thread, start_points, comms.size);
     
     if (command_line_args.output_vertex_dist && comms.boss) {
-        output_vertex_dist(vertices, vertices_per_thread, comms.size);
+        output_vertex_dist(vertices, vertices_per_thread, start_points, comms.size);
     }
 
-    mandle(comms, vertices, settings.its, modz, vertices_per_thread);
+    mandle(comms, vertices, settings.its, modz, vertices_per_thread, start_points);
 
     if (comms.boss) {write_mandle(vertices, modz);}
 
