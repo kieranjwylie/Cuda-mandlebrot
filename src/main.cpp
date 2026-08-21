@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
     if (comms.boss) {global_modz.resize(vertices.nv);}
     mandle(comms, vertices, settings.its, global_modz, vertices_per_thread, start_points);
 
-    if (comms.boss) {write_mandle(vertices, global_modz);}
+    //if (comms.boss) {write_mandle(vertices, global_modz);}
 
     ierr = finalise_comms();
     //write_mandle_bin(vertices, modz);
