@@ -42,13 +42,17 @@ int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vec
       modz[i] = 0.0;
     }
 
+    double start = MPI_Wtime();
     // Execute
     complex_loop(comms, vertices, its, modz, vertices_per_thread, start_points);
 
     // Each rank (should) onyl edit its corresponding vertices. So all reduce
     MPI_Allreduce(MPI_IN_PLACE, modz.data(), modz.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    
+    double end = MPI_Wtime();
+    double elapsed_time = end - start;
 
-    //std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;
+    if (comms.boss) {std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;}
 
     return 0;
 }
