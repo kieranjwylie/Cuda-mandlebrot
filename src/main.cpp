@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
 
     mandle(comms, vertices, settings.its, modz, vertices_per_thread, start_points);
 
-    if (comms.boss) {write_mandle(vertices, modz);}
+    //if (comms.boss) {write_mandle(vertices, modz);}
 
     ierr = finalise_comms();
     //write_mandle_bin(vertices, modz);
