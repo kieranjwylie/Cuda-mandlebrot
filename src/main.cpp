@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
     Command_Line command_line_args;
     Vertex<double> vertices;
-    std::vector<double> modz;
+    std::vector<double> global_modz;
     std::vector<int> vertices_per_thread, start_points;
 
     ierr = read_command_line(argc, argv, command_line_args);
@@ -45,18 +45,22 @@ int main(int argc, char *argv[]){
 
     nx = settings.nx;
     ny = settings.ny;
+    int num_nodes = nx * ny;
 
-    setup_grid(xl, xh, yl, yh, nx, ny, vertices);
+    distribute_nodes(num_nodes, vertices_per_thread, start_points, comms.size);
 
-    distribute_nodes(vertices, vertices_per_thread, start_points, comms.size);
+    setup_grid(comms, xl, xh, yl, yh, nx, ny, vertices, vertices_per_thread, start_points);
+
+    
     
     if (command_line_args.output_vertex_dist && comms.boss) {
-        output_vertex_dist(vertices, vertices_per_thread, start_points, comms.size);
+        output_vertex_dist(vertices.nv, vertices_per_thread, start_points, comms.size);
     }
 
-    mandle(comms, vertices, settings.its, modz, vertices_per_thread, start_points);
+    if (comms.boss) {global_modz.resize(vertices.nv);}
+    mandle(comms, vertices, settings.its, global_modz, vertices_per_thread, start_points);
 
-    //if (comms.boss) {write_mandle(vertices, modz);}
+    if (comms.boss) {write_mandle(vertices, global_modz);}
 
     ierr = finalise_comms();
     //write_mandle_bin(vertices, modz);

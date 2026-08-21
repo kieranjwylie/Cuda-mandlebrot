@@ -4,6 +4,7 @@
 struct Parallel_info {
     int rank;
     int size;
+    int boss_rank;
     bool boss;
 };
 

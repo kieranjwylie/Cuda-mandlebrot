@@ -11,6 +11,8 @@ int init_comms(Parallel_info &comms) {
     } else {
         comms.boss = false;
     }
+
+    comms.boss_rank = 0;
     return ierr;
 }
 

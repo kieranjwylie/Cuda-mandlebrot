@@ -3,8 +3,7 @@
 
 
 // Distribute the nodes evenly per thread, do no worry about the blocks
-void distribute_nodes(Vertex<double> vertices, std::vector<int> & vertices_per_thread, std::vector<int> & start_points, int threads) {
-    int n_nodes = vertices.nv; // Total number of nodes
+void distribute_nodes(const int n_nodes, std::vector<int> & vertices_per_thread, std::vector<int> & start_points, int threads) {
 
     int n_vertices_per_thread = n_nodes / threads;
     int remainder = n_nodes % threads;
@@ -25,8 +24,8 @@ void distribute_nodes(Vertex<double> vertices, std::vector<int> & vertices_per_t
     // Work out the start point for each thread
 }
 
-void output_vertex_dist(Vertex<double> vertices, std::vector<int> vertices_per_thread, std::vector<int> & start_points, int threads) {
-    std::cout << "Total number of vertices: " << vertices.nv << std::endl;
+void output_vertex_dist(const int n_nodes, std::vector<int> vertices_per_thread, std::vector<int> & start_points, int threads) {
+    std::cout << "Total number of vertices: " << n_nodes << std::endl;
     std::cout << "Number of threads: " << threads << std::endl;
     for (int i = 0; i < threads; i++) {
         std::cout << "Thread " << i << ": " << vertices_per_thread[i] << " vertices, starts at  " << start_points[i] << std::endl;

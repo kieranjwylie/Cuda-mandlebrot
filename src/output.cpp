@@ -6,9 +6,12 @@ int write_mandle(Vertex<double> vertices, std::vector<double> modz)
 {
     std::ofstream file("mandlebrot.txt");
 
-    for (int i = 0; i < vertices.nv ; i++) {
-        file << vertices.x[vertices.xidx[i]] << " " << vertices.y[vertices.yidx[i]]
-             << " " << modz[i] << std::endl;
+    int n = 0;
+    for (int i = 0; i < vertices.nx; i++) {
+        for (int j = 0; j < vertices.ny; j++) {
+            file << vertices.x[i] << " " << vertices.y[j] << " " << modz[n] << std::endl;
+            n++;
+        }
     }
     return 0;
 }
