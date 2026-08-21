@@ -52,7 +52,7 @@ int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vec
     double end = MPI_Wtime();
     double elapsed_time = end - start;
 
-    if (comms.boss) {std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;}
-
+    //if (comms.boss) {std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;}
+    if (comms.boss) {std::cout << elapsed_time << std::endl;}
     return 0;
 }
