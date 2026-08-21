@@ -15,15 +15,11 @@ void mandlebrot_calc(const Complex<double>& c, const int its, double& modz) {
     modz = z.mod();
 }
 
-void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread)
+void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, std::vector<int> & start_points)
 {
     int idx = comms.rank;
     int num_vertices = vertices_per_thread[idx];
-
-    int start_point = 0;
-    for (int irank = 0; irank < comms.rank; irank++) {
-      start_point = start_point + vertices_per_thread[irank];
-    }
+    int start_point = start_points[idx];
 
     double local_modz = -1.0; // Initialize local_modz to -1.0 for each thread
 
@@ -38,7 +34,7 @@ void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, s
     return;
 }
 
-int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread) 
+int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, std::vector<int> & start_points) 
 {
     // Init modz
     modz.resize(vertices.nv);
@@ -47,8 +43,7 @@ int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vec
     }
 
     // Execute
-    complex_loop(comms, vertices, its, modz, vertices_per_thread);
-
+    complex_loop(comms, vertices, its, modz, vertices_per_thread, start_points);
 
     // Each rank (should) onyl edit its corresponding vertices. So all reduce
     MPI_Allreduce(MPI_IN_PLACE, modz.data(), modz.size(), MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
