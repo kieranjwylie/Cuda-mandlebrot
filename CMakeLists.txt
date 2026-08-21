@@ -4,6 +4,9 @@ project(mandlebrot LANGUAGES CXX CUDA)
 set(CMAKE_CUDA_STANDARD 14)
 
 set (files 
+    src/json_parser/parse_json.cpp
+    src/json_parser/parse_json.hpp
+    src/json_parser/settings.hpp
     src/cli.cpp
     src/cli.hpp
     src/complex.hpp

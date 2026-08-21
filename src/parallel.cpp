@@ -1,5 +1,5 @@
 #include "parallel.hpp"
-
+#include <iostream>
 // // This is not strictly necessary for the mandlebrot code, but the following will domain decompose the problem per block
 // void domain_decompose(Vertex<double> & vertices, block_data & blocks, int nblocks, int nthreads) {
 //     int n_nodes = vertices.nv; // Total number of nodes
@@ -36,5 +36,13 @@ void distribute_nodes(Vertex<double> vertices, std::vector<int> & vertices_per_t
         if (i < remainder) {
             vertices_per_thread[i]++;
         }
+    }
+}
+
+void output_vertex_dist(Vertex<double> vertices, std::vector<int> vertices_per_thread, int threads) {
+    std::cout << "Total number of vertices: " << vertices.nv << std::endl;
+    std::cout << "Number of threads: " << threads << std::endl;
+    for (int i = 0; i < threads; i++) {
+        std::cout << "Thread " << i << " has " << vertices_per_thread[i] << " vertices." << std::endl;
     }
 }

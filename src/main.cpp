@@ -8,7 +8,8 @@
 #include "mandle.cuh"
 #include "output.hpp"
 #include "parallel.hpp"
-
+#include "json_parser/parse_json.hpp"
+#include "json_parser/settings.hpp"
 
 int main(int argc, char *argv[]){
 
@@ -27,26 +28,32 @@ int main(int argc, char *argv[]){
         return ierr;
     }
 
+    Problem_Settings settings;
+    ierr = parse_json(command_line_args.config_file, settings);
+
     if (command_line_args.output_device_props) {
         output_device_props();
     }
 
-    xl = command_line_args.xl;
-    xh = command_line_args.xh;
-    yl = command_line_args.yl;
-    yh = command_line_args.yh;
+    xl = settings.x_min;
+    xh = settings.x_max;
+    yl = settings.y_min;
+    yh = settings.y_max;
 
-    nx = command_line_args.nx;
-    ny = command_line_args.ny;
+    nx = settings.nx;
+    ny = settings.ny;
 
     int total_threads = command_line_args.blocks * command_line_args.threads;
 
     setup_grid(xl, xh, yl, yh, nx, ny, vertices);
 
     distribute_nodes(vertices, vertices_per_thread, total_threads);
+    if (command_line_args.output_vertex_dist) {
+        output_vertex_dist(vertices, vertices_per_thread, total_threads);
+    }
 
-    mandle(vertices, command_line_args.blocks, command_line_args.threads, command_line_args.its, modz, vertices_per_thread);
+    mandle(vertices, command_line_args.blocks, command_line_args.threads, settings.its, modz, vertices_per_thread);
 
     write_mandle(vertices, modz);
-    write_mandle_bin(vertices, modz);
+    //write_mandle_bin(vertices, modz);
 }

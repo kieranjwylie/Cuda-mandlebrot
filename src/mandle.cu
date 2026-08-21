@@ -2,7 +2,6 @@
 #include "mandle.cuh"
 #include <iostream>
 #include <cuda.h>
-#include <cuda_runtime.h> 
 #include <curand_kernel.h>
 
 
@@ -50,6 +49,7 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
 {
     double *d_x, *d_y, *d_modz;
     int *d_xidx, *d_yidx, *d_vertices_per_thread;
+    Timer_Cuda timer;
 
     h_modz.resize(vertices.nv);
     for (int i = 0; i < vertices.nv; i++) {
@@ -70,8 +70,14 @@ int mandle(Vertex<double> vertices, int blocks, int threads, int its, std::vecto
     CUDA_CHECK(cudaMemcpy(d_yidx, vertices.yidx.data(), vertices.nv * sizeof(int), cudaMemcpyHostToDevice));
     CUDA_CHECK(cudaMemcpy(d_vertices_per_thread, vertices_per_thread.data(), blocks * threads * sizeof(int), cudaMemcpyHostToDevice));
 
+    timer.start_timer();
+
     // Execute
     complex_loop<<<blocks,threads>>>(d_x, d_y, d_xidx, d_yidx, its, d_modz, d_vertices_per_thread);
+
+    timer.end_timer();
+    float elapsed_time = timer.time_elapsed;
+    std::cout << "Elapsed time: " << elapsed_time << " ms" << std::endl;
 
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess){

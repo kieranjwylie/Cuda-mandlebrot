@@ -32,7 +32,6 @@ class Complex
         }
 
         __device__
-        
         double mod() const
         {
             return sqrt(x*x + y*y);
