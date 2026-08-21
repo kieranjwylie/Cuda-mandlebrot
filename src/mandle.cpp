@@ -15,7 +15,7 @@ void mandlebrot_calc(const Complex<double>& c, const int its, double& modz) {
     modz = z.mod();
 }
 
-void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, std::vector<int> & start_points)
+void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, const std::vector<int> & start_points)
 {
     int idx = comms.rank;
     int num_vertices = vertices_per_thread[idx];
@@ -34,7 +34,7 @@ void complex_loop(Parallel_info comms, Vertex<double> vertices, const int its, s
     return;
 }
 
-int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, std::vector<int> & start_points) 
+int mandle(Parallel_info comms, Vertex<double> vertices, const int its, std::vector<double> &modz, const std::vector<int> &vertices_per_thread, const std::vector<int> & start_points) 
 {
     // Init modz
     modz.resize(vertices.nv);
