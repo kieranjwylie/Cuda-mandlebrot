@@ -3,6 +3,8 @@ project(mandlebrot LANGUAGES CXX CUDA)
 
 set(CMAKE_CUDA_STANDARD 14)
 
+find_package(MPI REQUIRED)
+
 set (files 
     src/json_parser/parse_json.cpp
     src/json_parser/parse_json.hpp
@@ -14,8 +16,10 @@ set (files
     src/grid.cpp
     src/grid.hpp
     src/main.cpp
-    src/mandle.cu
-    src/mandle.cuh
+    src/mandle.cpp
+    src/mandle.hpp
+    src/mpi_utils.cpp
+    src/mpi_utils.hpp
     src/output.cpp
     src/output.hpp
     src/parallel.cpp
@@ -23,6 +27,5 @@ set (files
 )
 
 add_executable(mandle ${files})
-
-
+target_link_libraries(mandle PRIVATE MPI::MPI_CXX)
 #target_compile_features(mandle PRIVATE cxx_std_23)

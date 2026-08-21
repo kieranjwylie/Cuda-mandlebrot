@@ -10,10 +10,8 @@ class Complex
         T x;
         T y;
 
-        __device__
         constexpr Complex(T real, T imag) : x(real), y(imag) {} ;
 
-        __device__
         constexpr Complex operator*(const Complex& rhs) const
         {
             return {
@@ -22,7 +20,6 @@ class Complex
             };
         }
 
-        __device__
         constexpr Complex operator+(const Complex& rhs) const
         {
             return {
@@ -31,7 +28,6 @@ class Complex
             };
         }
 
-        __device__
         double mod() const
         {
             return sqrt(x*x + y*y);
